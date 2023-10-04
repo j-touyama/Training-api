@@ -36,7 +36,7 @@
         WHERE
             id = #{id}
     </select>
-    <insert id="insertUser">
+    <insert id="insertUser" parameterType="com.example.TrainingApi.dto.UserDto">
         INSERT INTO staffs (
             staff_code
             ,last_name
@@ -52,17 +52,17 @@
             ,created_at
             ,updated_at
         ) VALUES (
-            #{dto.staffCode}
-            ,#{dto.lastName}
-            ,#{dto.firstName}
-            ,#{dto.lastNameRomaji}
-            ,#{dto.firstNameRomaji}
-            ,#{dto.staffDepartment}
-            ,#{dto.projectType}
-            ,#{dto.joinedYear}
-            ,#{dto.newGladFlg}
-            ,user
-            ,user
+            #{staffCode}
+            ,#{lastName}
+            ,#{firstName}
+            ,#{lastNameRomaji}
+            ,#{firstNameRomaji}
+            ,#{staffDepartment}
+            ,#{projectType}
+            ,#{joinedYear}
+            ,#{newGladFlg}
+            ,"user"
+            ,"user"
             ,CURRENT_TIMESTAMP
             ,CURRENT_TIMESTAMP
         )
@@ -70,19 +70,19 @@
     <update id="updateUser">
         UPDATE staffs
         SET
-             last_name=#{dto.lastName}
-            ,last_name=#{dto.lastName}
-            ,first_name=#{dto.firstName}
-            ,last_name_romaji=#{dto.lastNameRomaji}
-            ,first_name_romaji=#{dto.firstNameRomaji}
-            ,staff_department=#{dto.staffDepartment}
-            ,project_type=#{dto.projectType}
-            ,joined_year=#{dto.joinedYear}
-            ,new_glad_flg=#{dto.newGladFlg}
+             last_name=#{lastName}
+            ,last_name=#{lastName}
+            ,first_name=#{firstName}
+            ,last_name_romaji=#{lastNameRomaji}
+            ,first_name_romaji=#{firstNameRomaji}
+            ,staff_department=#{staffDepartment}
+            ,project_type=#{projectType}
+            ,joined_year=#{joinedYear}
+            ,new_glad_flg=#{newGladFlg}
             ,updated_by=user
             ,updated_at=CURRENT_TIMESTAMP
         WHERE
-            staff_code = #(dto.staffCode)
+            staff_code = #(staffCode)
     </update>
     <delete id="deleteUser">
         DELETE

@@ -8,6 +8,7 @@ import com.example.TrainingApi.dto.UserRequestDto;
 import com.example.TrainingApi.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 
 @Service
@@ -36,46 +37,63 @@ public class UserService {
     }
 
     /** ユーザー情報を登録 */
-    public boolean insertUser(UserRequestDto request){
+    public void insertUser(UserRequestDto request) throws Exception {
         try {
-            return this.dao.insertUser(convertUserDto(request)) > 0;
+            var dto = convertUserDto(request);
+            var result = this.dao.insertUser(dto);
+            if (result <= 0) {
+                throw new Exception("登録処理に失敗しました。");
+            }
         } catch (Exception e) {
             e.getStackTrace();
-            return false;
+            throw e;
         }
     }
 
     /** ユーザー情報を登録 */
-    public boolean updateUser(UserRequestDto request){
+    public void updateUser(UserRequestDto request) throws Exception {
         try {
-            return this.dao.updateUser(convertUserDto(request)) > 0;
+            var dto = convertUserDto(request);
+            var result = this.dao.updateUser(dto);
+            if (result <= 0) {
+                throw new Exception("更新処理に失敗しました。");
+            }
         } catch (Exception e) {
             e.getStackTrace();
-            return false;
+            throw e;
         }
     }
 
     /** ユーザー情報を削除 */
-    public boolean deleteUser(String staffCode) {
+    public void deleteUser(String staffCode) throws Exception {
+
         try {
-            return this.dao.deleteUser(staffCode) > 0;
+            var result = this.dao.deleteUser(staffCode);
+            if (result <= 0) {
+                throw new Exception("更新処理に失敗しました。");
+            }
         } catch (Exception e) {
             e.getStackTrace();
-            return false;
+            throw e;
         }
     }
 
     private UserDto convertUserDto(UserRequestDto requestDto) {
 
+        var projectType = requestDto.getProjectType();
+
+        projectType = projectType.replaceAll("\r\n", "<br />");
+        projectType = projectType.replaceAll("\n", "<br />");
+        projectType = projectType.replaceAll("\r", "<br />");
          return UserDto.builder()
-                 .id(Long.parseLong(requestDto.getId()))
+                 .id(Long.parseLong(StringUtils.hasText(requestDto.getId())?requestDto.getId():"0"))
                  .staffCode(requestDto.getStaffCode())
                  .lastName(requestDto.getLastName())
                  .firstName(requestDto.getFirstName())
                  .lastNameRomaji(requestDto.getLastNameRomaji())
                  .firstNameRomaji(requestDto.getFirstNameRomaji())
                  .staffDepartment(requestDto.getStaffDepartment())
-                 .projectType(requestDto.getProjectType())
+                 .projectType(projectType)
                  .joinedYear(requestDto.getJoinedYear())
                  .newGladFlg(requestDto.isNewGladFlg())
                  .build();

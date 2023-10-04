@@ -1,12 +1,17 @@
 package com.example.TrainingApi.controller;
 
 import com.example.TrainingApi.dto.UserDto;
+import com.example.TrainingApi.dto.UserListDto;
 import com.example.TrainingApi.dto.UserRequestDto;
 import com.example.TrainingApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.util.WebUtils;
 
 import java.util.List;
 
@@ -22,8 +27,12 @@ public class UserController {
      */
     @RequestMapping(value="/index",method=RequestMethod.GET)
     @ResponseBody
-    public List<UserDto> index() {
-        return service.selectAll();
+    public ResponseEntity<UserListDto> index() {
+        List<UserDto> userList = service.selectAll();
+        var result = UserListDto.builder()
+                .users(userList)
+                .build();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
@@ -32,8 +41,9 @@ public class UserController {
      */
     @RequestMapping(value="/info", method=RequestMethod.GET)
     @ResponseBody
-    public UserDto getEmployee(@RequestParam("id") String id) {
-        return service.selectedId(id);
+    public ResponseEntity<UserDto> getEmployee(@RequestParam("id") String id) {
+        var result = service.selectedId(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
@@ -42,9 +52,10 @@ public class UserController {
      */
     @RequestMapping(value="/insert", method= RequestMethod.POST)
     @ResponseBody
-    public String insertEmployee(@RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<String> insertEmployee(@RequestBody UserRequestDto requestDto) throws Exception {
 
-        return String.valueOf(service.insertUser(requestDto));
+        service.insertUser(requestDto);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     /**
@@ -52,9 +63,10 @@ public class UserController {
      */
     @RequestMapping(value="/update", method= RequestMethod.POST)
     @ResponseBody
-    public String updateEmployee(@RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<String> updateEmployee(@RequestBody UserRequestDto requestDto) throws Exception {
 
-        return String.valueOf(service.updateUser(requestDto));
+        service.updateUser(requestDto);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     /**
@@ -62,8 +74,9 @@ public class UserController {
      */
     @RequestMapping(value="/delete", method= RequestMethod.GET)
     @ResponseBody
-    public String deleteEmployee(@RequestParam("staffCode") String staffCode) {
+    public ResponseEntity<String> deleteEmployee(@RequestParam("staffCode") String staffCode) throws Exception {
 
-        return String.valueOf(service.deleteUser(staffCode));
+        service.deleteUser(staffCode);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
