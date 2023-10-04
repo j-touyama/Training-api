@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.TrainingApi.dao.UserDao">
+    <select id="selectAll" resultType="com.example.TrainingApi.dto.UserDto">
+        SELECT
+            id
+            ,staff_code
+            ,last_name
+            ,first_name
+            ,last_name_romaji
+            ,first_name_romaji
+            ,staff_department
+            ,project_type
+            ,joined_year
+            ,new_glad_flg
+        FROM
+            staffs
+    </select>
+
+    <select id="selectedId" resultType="com.example.TrainingApi.dto.UserDto">
+        SELECT
+            id
+            ,staff_code
+            ,last_name
+            ,first_name
+            ,last_name_romaji
+            ,first_name_romaji
+            ,staff_department
+            ,project_type
+            ,joined_year
+            ,new_glad_flg
+        FROM
+            staffs
+        WHERE
+            id = #{id}
+    </select>
+    <insert id="insertUser" parameterType="com.example.TrainingApi.dto.UserDto">
+        INSERT INTO staffs (
+            staff_code
+            ,last_name
+            ,first_name
+            ,last_name_romaji
+            ,first_name_romaji
+            ,staff_department
+            ,project_type
+            ,joined_year
+            ,new_glad_flg
+            ,created_by
+            ,updated_by
+            ,created_at
+            ,updated_at
+        ) VALUES (
+            #{staffCode}
+            ,#{lastName}
+            ,#{firstName}
+            ,#{lastNameRomaji}
+            ,#{firstNameRomaji}
+            ,#{staffDepartment}
+            ,#{projectType}
+            ,#{joinedYear}
+            ,#{newGladFlg}
+            ,"user"
+            ,"user"
+            ,CURRENT_TIMESTAMP
+            ,CURRENT_TIMESTAMP
+        )
+    </insert>
+    <update id="updateUser" parameterType="com.example.TrainingApi.dto.UserDto">
+        UPDATE staffs
+        SET
+            staff_code=#{staffCode}
+            ,last_name=#{lastName}
+            ,first_name=#{firstName}
+            ,last_name_romaji=#{lastNameRomaji}
+            ,first_name_romaji=#{firstNameRomaji}
+            ,staff_department=#{staffDepartment}
+            ,project_type=#{projectType}
+            ,joined_year=#{joinedYear}
+            ,new_glad_flg=#{newGladFlg}
+            ,updated_by="user"
+            ,updated_at=CURRENT_TIMESTAMP
+        WHERE
+            id = #{id}
+    </update>
+    <delete id="deleteUser">
+        DELETE
+        FROM staffs
+        WHERE
+            staff_code = #{staffCode}
+    </delete>
+</mapper>
